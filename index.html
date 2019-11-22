@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>NotBerlin</title>
+
+    <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+  
+</head>
+<body>
+    
+<div class="canvas">
+        <div class="grid"><span class="grid__cell"></span><span class="grid__cell"></span><span class="grid__cell"></span><span class="grid__cell"></span><span class="grid__cell"></span><span class="grid__cell"></span><span class="grid__cell"></span><span class="grid__cell"></span><span class="grid__cell"></span><span class="grid__cell"></span><span class="grid__cell"></span><span class="grid__cell"></span><span class="grid__cell"></span><span class="grid__cell"></span><span class="grid__cell"></span><span class="grid__cell"></span><span class="grid__cell"></span><span class="grid__cell"></span><span class="grid__cell"></span><span class="grid__cell"></span><span class="grid__cell"></span><span class="grid__cell"></span><span class="grid__cell"></span><span class="grid__cell"></span><span class="grid__cell"></span><span class="grid__cell"></span><span class="grid__cell"></span><span class="grid__cell"></span><span class="grid__cell"></span><span class="grid__cell"></span><span class="grid__cell"></span><span class="grid__cell"></span><span class="grid__cell"></span><span class="grid__cell"></span><span class="grid__cell"></span><span class="grid__cell"></span><span class="grid__cell"></span><span class="grid__cell"></span><span class="grid__cell"></span><span class="grid__cell"></span><span class="grid__cell"></span><span class="grid__cell"></span>
+        </div>
+</div>
+<div class="canvas">
+	 <h1>Not berlin</h1>
+	 <h1>Not berlin</h1> 
+	 <h1>Not berlin</h1> 
+	 <h1>Not berlin</h1>  
+	 <h1>Not berlin</h1> 
+</div>
+<div></div>
+    
+</div>
+
+    
+</body>
+<!-- js -->
+<script>
+    /* 
+ * SILVER-GOLD PATTERNS
+ * Generative patterns based on 9 geometrical shapes.
+ * Click/tap on your screen to stop/play generating a new pattern.
+ * js home
+ */
+
+const getRandomIntInclusive = (minNum, maxNum) => {
+	const min = minNum;
+	const max = Math.floor(maxNum);
+
+	return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
+const colorClass = {
+	options: ["c1", "c2"],
+	addRandom: function(el) {
+		const randomColorClass = getRandomIntInclusive(0, colorClass.options.length - 1);
+		const selectedClass = colorClass.options[randomColorClass];
+
+		el.classList.add(selectedClass);
+	}
+};
+
+const generativePattern = {
+	set: function(el) {
+		el.forEach(item => {
+			// Let us first remove all classes, to reset them later
+			item.className = "";
+
+			/* Reset Class Names */
+			// Let's create the shared class and random shape class
+			const sharedClass = "grid__cell";
+			const totalShapeClasses = 9;
+			const randomShapeClass = getRandomIntInclusive(1, totalShapeClasses);
+			item.classList.add(sharedClass, `${sharedClass}--${randomShapeClass}`);
+
+			// Let's create the random color class
+			colorClass.addRandom(item);
+		});
+	},
+	create: function() {
+		const cell = document.querySelectorAll(".grid__cell");
+		generativePattern.set(cell);
+	}
+};
+
+var styleTimeout = {
+	set: function(el) {
+		setTimeout(() => el.style = '', 50);
+	},
+	cancel: function() {
+		clearTimeout(styleTimeout.set);
+	}
+};
+
+let animationInterval;
+const patternAnimation = {
+	timing: 650,
+	start: function() {
+		animationInterval = setInterval(generativePattern.create, patternAnimation.timing);
+	},
+	toggle: function () {
+		const thisEl = this;
+
+		if (!animationInterval) {
+			thisEl.style = `transform: scale(1.1)`;
+			patternAnimation.start();
+		} else {
+			thisEl.style = `transform: scale(0.9)`;
+			clearInterval(animationInterval);
+			animationInterval = null;
+		}
+		
+		styleTimeout.cancel();
+		styleTimeout.set(thisEl);
+	},
+};
+
+patternAnimation.start();
+
+const canvas = document.querySelector(".canvas");
+canvas.addEventListener("click", patternAnimation.toggle);
+</script>
+</html>
